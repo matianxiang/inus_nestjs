@@ -13,4 +13,5 @@ export class InusController {
   list(): ResBasic<string> {
     return new SuccessRes('inus');
   }
+  
 }
