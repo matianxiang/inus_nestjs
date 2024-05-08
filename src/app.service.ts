@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-// providers 
+// providers
 @Injectable()
 export class AppService {
   getHello(): string {

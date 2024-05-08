@@ -1,5 +1,4 @@
 import { Controller, Get, HttpCode } from '@nestjs/common';
-import { version } from 'os';
 import { SuccessRes } from 'src/models';
 import { ResBasic } from 'src/types/common';
 
@@ -13,5 +12,4 @@ export class InusController {
   list(): ResBasic<string> {
     return new SuccessRes('inus');
   }
-  
 }
