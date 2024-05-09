@@ -30,7 +30,7 @@ export class UploadController {
   // 直接下载文件
   @Get('download')
   download(@Res() res: Response) {
-    const url = join(__dirname, `../images/1.svg`);
+    const url = join(__dirname, `../public/images/1.svg`);
     res.download(url);
   }
 
@@ -38,7 +38,7 @@ export class UploadController {
   @Get('stream')
   async stream(@Res() res: Response) {
     const temp_file_name = '1.svg';
-    const url = join(__dirname, `../images/${temp_file_name}`);
+    const url = join(__dirname, `../public/images/${temp_file_name}`);
     const tarStream = new zip.Stream(); //压缩文件
     await tarStream.addEntry(url);
 
