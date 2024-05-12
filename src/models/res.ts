@@ -1,4 +1,4 @@
-import { HttpCode } from "src/enums";
+import { HttpCode } from 'src/enums';
 
 class ResBasic {
   code: HttpCode;
