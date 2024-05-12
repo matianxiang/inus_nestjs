@@ -2,11 +2,12 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { VersioningType } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule); //NestExpressApplication express应用类型
   // 开放静态资源目录
-  app.useStaticAssets('public', {
+  app.useStaticAssets(join(__dirname, 'images'), {
     // __dirname是Node.js的全局变量，表示当前执行脚本所在的目录 这里是指 xxx/inus-nestjs/dist
     // prefix: '/static/' // 指定前缀 /static 就必须用localhost:3000/static/1.jpg
     maxAge: 60 * 1000 * 60, // 最长缓存时间 1h
