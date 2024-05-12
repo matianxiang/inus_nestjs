@@ -7,3 +7,9 @@ export enum HttpCode {
   NOT_FOUND = 404, //接口不存在
   INTERNAL_SERVER_ERROR = 500, //服务端错误
 }
+
+export enum Gender {
+  Man = 0,
+  Woman = 1,
+  Unknown = 2,
+}

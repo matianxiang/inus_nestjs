@@ -10,7 +10,7 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule); //NestExpressApplication express应用类型
 
-  app.set('trust proxy', 1); // 如果在服务器和以太网之间存在负载均衡或者反向代理，Express 可能需要配置为信任 proxy 设置的头文件，从而保证最终用户得到正确的 IP 地址。
+  // app.set('trust proxy', 1); // 如果在服务器和以太网之间存在负载均衡或者反向代理，Express 可能需要配置为信任 proxy 设置的头文件，从而保证最终用户得到正确的 IP 地址。
 
   // 开放静态资源目录
   app.useStaticAssets(join(__dirname, 'images'), {
