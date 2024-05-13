@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
+import { faker } from '@faker-js/faker';
 
 @Injectable()
 export class UserService {
@@ -9,6 +10,25 @@ export class UserService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
   ) {}
+
+  async mockUser(): Promise<void> {
+    for (let i = 0; i < 100; i++) {
+      const user = new User();
+      user.username = faker.person.fullName();
+      user.password = faker.internet.password();
+      user.email = faker.internet.email();
+      user.gender = faker.number.int({ min: 0, max: 2 });
+      user.avatar_url = faker.image.avatar();
+      user.created_at = faker.date.recent();
+      user.phone_number = faker.string.numeric(11);
+      user.address = faker.location.city();
+      await this.userRepository.save(user); // 保存用户到数据库
+    }
+  }
+
+  async clearUsers(): Promise<void> {
+    return this.userRepository.clear();
+  }
 
   async createUser(userData: Partial<User>): Promise<User> {
     const newUser = this.userRepository.create(userData);
@@ -25,28 +45,62 @@ export class UserService {
   }
 
   async deleteUser(user_id: number): Promise<void> {
-    const result = await this.userRepository.delete(user_id);
+    const result = await this.userRepository.delete({ user_id });
     if (result.affected === 0) {
       throw new Error('User not found');
     }
   }
 
-  async deleteMultipleUsers(userIds: number[]): Promise<void> {
-    const result = await this.userRepository.delete(userIds);
-    if (result.affected === 0) {
-      throw new Error('No users found');
-    }
-  }
+  // async deleteMultipleUsers(user_ids: number[]): Promise<void> {
+  //   console.log('user_ids', user_ids);
+  //   const result = await this.userRepository
+  //     .createQueryBuilder()
+  //     .delete()
+  //     .from(User)
+  //     .where('user_id in (:...user_ids)', { user_ids })
+  //     .execute();
+  //   if (result.affected === 0) {
+  //     throw new Error('No users found');
+  //   }
+  // }
 
-  findOneById(user_id: number): Promise<User | undefined> {
+  async findOneById(user_id: number): Promise<User | undefined> {
     return this.userRepository.findOne({ where: { user_id } });
   }
 
-  findAll(page: number, limit: number): Promise<User[]> {
+  async findUsersByUsername(username: string): Promise<User[]> {
+    return this.userRepository
+      .createQueryBuilder('user')
+      .where('user.username like :username', { username: `%${username}%` })
+      .getMany();
+  }
+
+  async findAll(page: number, limit: number): Promise<User[]> {
     return this.userRepository.find({
       skip: (page - 1) * limit,
       take: limit,
     });
+  }
+
+  async findUsersByUsernameSortedByCreatedAt(
+    username: string,
+  ): Promise<User[]> {
+    return this.userRepository
+      .createQueryBuilder('user')
+      .where('user.username LIKE :username', { username: `%${username}%` })
+      .orderBy('user.created_at', 'DESC')
+      .getMany();
+  }
+
+  async findUsersByUsernameSortedByFollowingCount(
+    username: string,
+  ): Promise<User[]> {
+    return this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.followers', 'followers')
+      .where('user.username LIKE :username', { username: `%${username}%` })
+      .orderBy('user.following_count', 'DESC')
+      .getMany();
   }
 
   count(): Promise<number> {

@@ -28,7 +28,7 @@ export class User {
   })
   gender: Gender;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   avatar_url: string;
 
   @CreateDateColumn()
