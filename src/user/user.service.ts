@@ -51,28 +51,11 @@ export class UserService {
     }
   }
 
-  // async deleteMultipleUsers(user_ids: number[]): Promise<void> {
-  //   console.log('user_ids', user_ids);
-  //   const result = await this.userRepository
-  //     .createQueryBuilder()
-  //     .delete()
-  //     .from(User)
-  //     .where('user_id in (:...user_ids)', { user_ids })
-  //     .execute();
-  //   if (result.affected === 0) {
-  //     throw new Error('No users found');
-  //   }
-  // }
-
-  async findOneById(user_id: number): Promise<User | undefined> {
-    return this.userRepository.findOne({ where: { user_id } });
-  }
-
-  async findUsersByUsername(username: string): Promise<User[]> {
-    return this.userRepository
-      .createQueryBuilder('user')
-      .where('user.username like :username', { username: `%${username}%` })
-      .getMany();
+  async deleteMultipleUsers(user_ids: number[]): Promise<void> {
+    const result = await this.userRepository.delete(user_ids);
+    if (result.affected === 0) {
+      throw new Error('No users found');
+    }
   }
 
   async findAll(page: number, limit: number): Promise<User[]> {
@@ -80,6 +63,23 @@ export class UserService {
       skip: (page - 1) * limit,
       take: limit,
     });
+  }
+
+  async findOneById(user_id: number): Promise<User | undefined> {
+    return this.userRepository.findOne({ where: { user_id } });
+  }
+
+  async findUsersByUsername(username: string): Promise<User[]> {
+    console.log('username', username);
+    return this.userRepository
+      .createQueryBuilder('user')
+      .where('user.username like :username', { username: `%${username}%` })
+      .orderBy(
+        `CASE WHEN user.username = :username THEN 0 ELSE 1 END, LENGTH(user.username)`,
+        'ASC',
+      )
+      .cache(60000) // 1 min
+      .getMany();
   }
 
   async findUsersByUsernameSortedByCreatedAt(
@@ -97,7 +97,6 @@ export class UserService {
   ): Promise<User[]> {
     return this.userRepository
       .createQueryBuilder('user')
-      .leftJoinAndSelect('user.followers', 'followers')
       .where('user.username LIKE :username', { username: `%${username}%` })
       .orderBy('user.following_count', 'DESC')
       .getMany();

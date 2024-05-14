@@ -43,31 +43,14 @@ export class UserController {
     return new SuccessRes(res);
   }
 
-  @Put(':user_id')
+  @Post('batch-delete')
   @HttpCode(200)
-  async updateUser(
-    @Param('user_id') user_id: number,
-    @Body() updateData: Partial<User>,
-  ): Promise<ResBasic<User>> {
-    const res = await this.userService.updateUser(user_id, updateData);
-    return new SuccessRes(res);
-  }
-
-  @Delete(':user_id')
-  @HttpCode(200)
-  async deleteUser(@Param('user_id') user_id: number): Promise<ResBasic<void>> {
-    await this.userService.deleteUser(user_id);
+  async deleteMultipleUsers(
+    @Body('user_ids') user_ids: number[],
+  ): Promise<ResBasic> {
+    await this.userService.deleteMultipleUsers(user_ids);
     return new SuccessRes({});
   }
-
-  // @Delete('batch')
-  // @HttpCode(200)
-  // async deleteMultipleUsers(
-  //   @Body('user_ids') user_ids: number[],
-  // ): Promise<ResBasic> {
-  //   await this.userService.deleteMultipleUsers(user_ids);
-  //   return new SuccessRes({});
-  // }
 
   @Get()
   @HttpCode(200)
@@ -86,15 +69,6 @@ export class UserController {
     return new SuccessRes(res);
   }
 
-  @Get(':user_id')
-  @HttpCode(200)
-  async getUserById(
-    @Param('user_id') user_id: number,
-  ): Promise<ResBasic<User>> {
-    const res = await this.userService.findOneById(user_id);
-    return new SuccessRes(res);
-  }
-
   @Get('search')
   @HttpCode(200)
   async findUsersByUsername(
@@ -104,7 +78,7 @@ export class UserController {
     return new SuccessRes(res);
   }
 
-  @Get('search/sorted-by-creation')
+  @Get('sorted-by-creation')
   @HttpCode(200)
   async findUsersByUsernameSortedByCreatedAt(
     @Query('username') username: string,
@@ -114,7 +88,7 @@ export class UserController {
     return new SuccessRes(res);
   }
 
-  @Get('search/sorted-by-following')
+  @Get('sorted-by-following')
   @HttpCode(200)
   async findUsersByUsernameSortedByFollowingCount(
     @Query('username') username: string,
@@ -124,5 +98,31 @@ export class UserController {
         username,
       );
     return new SuccessRes(res);
+  }
+
+  @Get(':user_id')
+  @HttpCode(200)
+  async getUserById(
+    @Param('user_id') user_id: number,
+  ): Promise<ResBasic<User>> {
+    const res = await this.userService.findOneById(user_id);
+    return new SuccessRes(res);
+  }
+
+  @Put(':user_id')
+  @HttpCode(200)
+  async updateUser(
+    @Param('user_id') user_id: number,
+    @Body() updateData: Partial<User>,
+  ): Promise<ResBasic<User>> {
+    const res = await this.userService.updateUser(user_id, updateData);
+    return new SuccessRes(res);
+  }
+
+  @Delete(':user_id')
+  @HttpCode(200)
+  async deleteUser(@Param('user_id') user_id: number): Promise<ResBasic<void>> {
+    await this.userService.deleteUser(user_id);
+    return new SuccessRes({});
   }
 }
