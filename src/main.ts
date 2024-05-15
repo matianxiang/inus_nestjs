@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { VersioningType } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import helmet from 'helmet';
@@ -33,6 +33,18 @@ async function bootstrap() {
       max: 100, // limit each IP to 100 requests per windowMs
     }),
   ); // 保护应用程序免受暴力攻击，实现某种速率限制
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true, // 自动剥离非装饰器定义的属性
+      // forbidNonWhitelisted: true, // 当请求中包含非白名单属性时抛出错误
+      transform: true, // 自动转换为 DTO 类的实例
+      disableErrorMessages: false, // 生产环境可以设置为true减少详细错误输出
+      transformOptions: {
+        enableImplicitConversion: true, // 允许隐式转换
+      },
+    }),
+  );
   await app.listen(3000);
 }
 bootstrap();

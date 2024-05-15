@@ -37,10 +37,10 @@ export class User {
   @Column({ type: 'varchar', length: 15, default: '12345678999' })
   phone_number: string;
 
-  @Column({ type: 'int', default: 0, comment: '我关注的人' })
+  @Column({ type: 'int', default: 0, comment: '关注我的人' })
   follower_count: number;
 
-  @Column({ type: 'int', default: 0, comment: '关注我的人' })
+  @Column({ type: 'int', default: 0, comment: '我关注的人' })
   following_count: number;
 
   @Column({ type: 'int', default: 0 })
