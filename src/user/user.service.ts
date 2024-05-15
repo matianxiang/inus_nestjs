@@ -14,6 +14,7 @@ export class UserService {
   async mockUser(): Promise<void> {
     for (let i = 0; i < 100; i++) {
       const user = new User();
+      user.user_id = i + 1;
       user.username = faker.person.fullName();
       user.password = faker.internet.password();
       user.email = faker.internet.email();

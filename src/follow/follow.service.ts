@@ -91,4 +91,39 @@ export class FollowService {
       1,
     );
   }
+
+  // 获取当前表中记录数
+  async count(): Promise<number> {
+    return await this.followRepository.count();
+  }
+
+  // 方法来生成和插入随机关注记录
+  async generateMockFollows(): Promise<void> {
+    const uniquePairs = new Set<string>();
+    while (uniquePairs.size < 200) {
+      const followerId = Math.floor(Math.random() * 99) + 1; // 随机生成0到100的followerId
+      const followingId = Math.floor(Math.random() * 99) + 1; // 随机生成0到100的followingId
+
+      // 确保没有用户关注自己以及避免重复的关注对
+      if (followerId !== followingId) {
+        const pair = `${followerId}-${followingId}`;
+        uniquePairs.add(pair);
+      }
+    }
+
+    // 遍历集合并插入每个唯一的关注对
+    for (const pair of uniquePairs) {
+      const [followerId, followingId] = pair.split('-').map(Number);
+      const follow = this.followRepository.create({
+        follower_id: followerId,
+        following_id: followingId,
+      });
+      await this.followRepository.save(follow);
+    }
+  }
+
+  // 清空当前follow表记录
+  async clearFollows(): Promise<void> {
+    await this.followRepository.clear();
+  }
 }

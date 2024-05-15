@@ -22,7 +22,7 @@ import { FailedRes, SuccessRes } from 'src/models';
 export class FollowController {
   constructor(private readonly followService: FollowService) {}
 
-  @Get('/rank')
+  @Get('rank')
   @HttpCode(200)
   async getTopFollowingUsers(
     @Query() QueryFollowDto: QueryFollowRankDto,
@@ -35,7 +35,7 @@ export class FollowController {
   }
 
   // 关注该用户的用户列表
-  @Get('/followers/:user_id')
+  @Get('followers/:user_id')
   @HttpCode(200)
   async getUserFollowers(
     @Param() queryUserFollowDto: QueryUserFollowDto,
@@ -48,7 +48,7 @@ export class FollowController {
   }
 
   // 该用户的关注列表
-  @Get('/followings/:user_id')
+  @Get('followings/:user_id')
   @HttpCode(200)
   async getUserFollowings(
     @Param() queryUserFollowDto: QueryUserFollowDto,
@@ -60,7 +60,7 @@ export class FollowController {
     return new SuccessRes(res);
   }
 
-  @Post('/add')
+  @Post('add')
   @HttpCode(200)
   async followUser(@Body() followDto: FollowDto): Promise<any> {
     // 调用服务层方法来处理新增关注
@@ -76,9 +76,9 @@ export class FollowController {
     return new SuccessRes({});
   }
 
-  @Delete('/remove')
+  @Delete('remove')
   @HttpCode(200)
-  async unfollowUser(@Body() followDto: FollowDto): Promise<any> {
+  async unfollowUser(@Body() followDto: FollowDto): Promise<ResBasic<object>> {
     console.log('123', followDto.follower_id, followDto.following_id);
     // 调用服务层方法来处理新增关注
     const hasFollowExists = await this.followService.followExists(
@@ -87,10 +87,36 @@ export class FollowController {
     );
     if (!hasFollowExists) return new FailedRes({}, '关注记录不存在');
     // 调用服务层方法来处理取消关注
-    const res = await this.followService.removeFollow(
+    await this.followService.removeFollow(
       followDto.follower_id,
       followDto.following_id,
     );
-    return new SuccessRes(res);
+    return new SuccessRes({});
+  }
+
+  @Get('count')
+  @HttpCode(200)
+  async count(): Promise<ResBasic<number>> {
+    const count = await this.followService.count();
+    return new SuccessRes(count);
+  }
+
+  @Post('mock')
+  @HttpCode(200)
+  async mockFollowRecords(): Promise<ResBasic<object>> {
+    const count = await this.followService.count();
+    if (count < 200) {
+      await this.followService.generateMockFollows();
+      return new SuccessRes({});
+    } else {
+      return new FailedRes({}, '记录数已经达到200');
+    }
+  }
+
+  @Delete('clear')
+  @HttpCode(200)
+  async clearFollowRecords(): Promise<ResBasic<object>> {
+    await this.followService.clearFollows();
+    return new SuccessRes({});
   }
 }

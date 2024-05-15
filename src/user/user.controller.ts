@@ -26,7 +26,7 @@ export class UserController {
     if (count <= 100) {
       await this.userService.mockUser();
     }
-    return new SuccessRes(null);
+    return new SuccessRes({});
   }
 
   @Delete('clear')
