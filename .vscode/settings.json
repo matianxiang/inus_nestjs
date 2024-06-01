@@ -1,0 +1,15 @@
+{
+  // eslint配置项，保存时自动修复
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always",
+  },
+  // 自动设定eslint工作区
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
+  "[jsonc]": {
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+  },
+}
