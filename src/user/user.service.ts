@@ -110,6 +110,14 @@ export class UserService {
     return this.userRepository.count();
   }
 
+  async getPosts(user_id: number): Promise<Post[]> {
+    return this.postRepository.find({
+      where: { user_id: user_id },
+      order: { created_at: 'DESC' },
+      relations: ['comments', 'imgs'], // 需要查全
+    });
+  }
+
   async getFavourPosts(user_id: number): Promise<Post[]> {
     const user = await this.userRepository.findOne({ where: { user_id } });
     if (!user) {

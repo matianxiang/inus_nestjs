@@ -100,6 +100,11 @@ export class UserController {
     return new SuccessRes(res);
   }
 
+  @Get('query-posts/:user_id')
+  getPosts(@Param('user_id', ParseIntPipe) user_id: number) {
+    return this.userService.getPosts(user_id);
+  }
+
   @Get('favour-posts/:user_id')
   getFavourPosts(@Param('user_id', ParseIntPipe) user_id: number) {
     return this.userService.getFavourPosts(user_id);
