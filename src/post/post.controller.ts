@@ -1,34 +1,46 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  Delete,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { PostService } from './post.service';
-import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
 
-@Controller('post')
+@Controller('posts')
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Post()
-  create(@Body() createPostDto: CreatePostDto) {
-    return this.postService.create(createPostDto);
+  createPost(CreatePostDto) {
+    return this.postService.createPost(CreatePostDto);
   }
 
-  @Get()
-  findAll() {
-    return this.postService.findAll();
+  @Delete()
+  deletePosts(@Query('ids') ids: string[]) {
+    return this.postService.deletePostsByIds(ids);
+  }
+
+  @Put(':id')
+  updatePost(updatePostDto) {
+    return this.postService.updatePost(updatePostDto);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.postService.findOne(+id);
+  getPostById(@Param('id') id: string) {
+    return this.postService.getPostById(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postService.update(+id, updatePostDto);
+  @Post('toggle-favour')
+  toggleFavour(@Body('user_id') user_id: number, @Body('id') id: string) {
+    return this.postService.toggleFavour(user_id, id);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.postService.remove(+id);
+  @Post('toggle-favour')
+  toggleStar(@Body('user_id') user_id: number, @Body('id') id: string) {
+    return this.postService.toggleStar(user_id, id);
   }
 }

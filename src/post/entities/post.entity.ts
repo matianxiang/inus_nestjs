@@ -10,6 +10,8 @@ import {
   AfterRemove,
   getRepository,
   OneToMany,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 
 import { User } from 'src/user/entities/user.entity';
@@ -43,6 +45,10 @@ export class Post {
   @Column({ type: 'int', default: 0 })
   favour_count: number;
 
+  @ManyToMany(() => User)
+  @JoinTable()
+  favour_by: User[];
+
   @Column({ type: 'int', default: 0 })
   comment_count: number;
 
@@ -51,6 +57,10 @@ export class Post {
 
   @Column({ type: 'int', default: 0 })
   star_count: number;
+
+  @ManyToMany(() => User)
+  @JoinTable()
+  star_by: User[];
 
   @OneToMany(() => Img, (img) => img.post, {
     cascade: ['insert', 'update', 'remove'],
