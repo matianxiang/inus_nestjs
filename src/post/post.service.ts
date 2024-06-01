@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Post } from './entities/post.entity';
 import { User } from 'src/user/entities/user.entity';
-import { Img } from './entities/img.entity';
+import { PostImg } from './entities/post-img.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 
@@ -14,7 +14,7 @@ export class PostService {
     private postRepository: Repository<Post>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    @InjectRepository(Img) private imgRepository: Repository<Img>,
+    @InjectRepository(PostImg) private imgRepository: Repository<PostImg>,
   ) {}
 
   async createPost(createPostDto: CreatePostDto): Promise<Post> {
@@ -26,7 +26,7 @@ export class PostService {
     // 保存 Post 实体以获取生成的 ID
     const savedPost = await this.postRepository.save(post);
     if (imgs && imgs.length > 0) {
-      // 为每个 Img 创建实体并设置关联
+      // 为每个 PostImg 创建实体并设置关联
       const imgEntities = imgs.map((imgDto) => {
         const img = this.imgRepository.create({
           ...imgDto,
@@ -35,7 +35,7 @@ export class PostService {
         return this.imgRepository.save(img);
       });
 
-      // 等待所有 Img 实体保存完成
+      // 等待所有 PostImg 实体保存完成
       await Promise.all(imgEntities);
     }
     return savedPost;

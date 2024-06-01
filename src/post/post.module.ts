@@ -5,10 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Post } from './entities/post.entity';
 import { Comment } from './entities/comment.entity';
-import { Img } from './entities/img.entity';
+import { PostImg } from './entities/post-img.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Post, Comment, Img])],
+  imports: [TypeOrmModule.forFeature([User, Post, Comment, PostImg])],
   controllers: [PostController],
   providers: [PostService],
 })
