@@ -4,6 +4,7 @@ import {
   JoinColumn,
   OneToOne,
   PrimaryColumn,
+  Column,
 } from 'typeorm';
 import { Post } from './post.entity';
 import { User } from 'src/user/entities/user.entity';
@@ -11,7 +12,10 @@ import { Img } from 'src/upload/entities/img.entity';
 
 @Entity('PostImgs')
 export class PostImg {
-  @PrimaryColumn({ type: 'string' })
+  @PrimaryColumn()
+  id: string;
+
+  @Column({ type: 'string' })
   img_id: string;
 
   @OneToOne(() => Img, { onDelete: 'CASCADE' })
