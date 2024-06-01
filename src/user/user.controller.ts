@@ -124,6 +124,36 @@ export class UserController {
     return new SuccessRes(res);
   }
 
+  @Put('introduction/:user_id')
+  async updateIntroduction(
+    @Param('user_id', ParseIntPipe) user_id: number,
+    @Body('introduction') introduction: string,
+  ) {
+    await this.userService.updateIntroduction(user_id, introduction);
+    return new SuccessRes('Introduction updated successfully');
+  }
+
+  @Put('tags/:user_id')
+  async updateTags(
+    @Param('user_id', ParseIntPipe) user_id: number,
+    @Body('tags') tags: string[],
+  ) {
+    await this.userService.updateTags(user_id, tags);
+    return new SuccessRes('Tags updated successfully');
+  }
+
+  @Put('official-certification/:user_id')
+  async updateOfficialCertification(
+    @Param('user_id', ParseIntPipe) user_id: number,
+    @Body('officialCertification') officialCertification: boolean,
+  ) {
+    await this.userService.updateOfficialCertification(
+      user_id,
+      officialCertification,
+    );
+    return new SuccessRes('Official certification status updated successfully');
+  }
+
   @Put(':user_id')
   @HttpCode(200)
   async updateUser(

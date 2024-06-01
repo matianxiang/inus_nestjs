@@ -147,4 +147,24 @@ export class UserService {
       where: { id: In(user.star_post_ids) },
     });
   }
+
+  async updateIntroduction(
+    user_id: number,
+    introduction: string,
+  ): Promise<void> {
+    await this.userRepository.update(user_id, { introduction });
+  }
+
+  async updateTags(user_id: number, tags: string[]): Promise<void> {
+    await this.userRepository.update(user_id, { tags });
+  }
+
+  async updateOfficialCertification(
+    user_id: number,
+    officialCertification: boolean,
+  ): Promise<void> {
+    await this.userRepository.update(user_id, {
+      official_certification: officialCertification,
+    });
+  }
 }

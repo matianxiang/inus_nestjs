@@ -68,4 +68,14 @@ export class User {
 
   @Column('simple-array')
   star_post_ids: string[];
+
+  @Column({ type: 'varchar', length: 500, nullable: true })
+  introduction: string; // 个人简介，长度限制500
+
+  @Column('simple-array')
+  tags: string[]; // 标签数组
+
+  // 是否是官方认证，默认为false
+  @Column({ type: 'boolean', default: false })
+  official_certification: boolean;
 }
