@@ -44,7 +44,7 @@ export class Post {
   favour_count: number;
 
   @Column({ type: 'int', default: 0 })
-  comments_count: number;
+  comment_count: number;
 
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[];

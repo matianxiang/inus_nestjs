@@ -59,7 +59,7 @@ export class Comment {
     await entityManager.increment(
       Post,
       { id: this.post.id },
-      'comments_count',
+      'comment_count',
       increment,
     );
   }
