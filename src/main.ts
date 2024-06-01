@@ -13,11 +13,11 @@ async function bootstrap() {
   // app.set('trust proxy', 1); // 如果在服务器和以太网之间存在负载均衡或者反向代理，Express 可能需要配置为信任 proxy 设置的头文件，从而保证最终用户得到正确的 IP 地址。
 
   // 开放静态资源目录
-  app.useStaticAssets(join(__dirname, 'images'), {
+  app.useStaticAssets(join(__dirname, 'public'), {
     // __dirname是Node.js的全局变量，表示当前执行脚本所在的目录 这里是指 xxx/inus-nestjs/dist
     // prefix: '/static/' // 指定前缀 /static 就必须用localhost:3000/static/1.jpg
     maxAge: 60 * 1000 * 60, // 最长缓存时间 1h
-  }); //根目录下的images目录
+  }); //根目录下的public目录
   // 允许跨域
   app.enableCors();
   // 控制版本

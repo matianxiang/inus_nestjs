@@ -6,6 +6,7 @@ import { User } from 'src/user/entities/user.entity';
 import { PostImg } from './entities/post-img.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { Img } from 'src/upload/entities/img.entity';
 
 @Injectable()
 export class PostService {
@@ -14,7 +15,10 @@ export class PostService {
     private postRepository: Repository<Post>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    @InjectRepository(PostImg) private imgRepository: Repository<PostImg>,
+    @InjectRepository(PostImg)
+    private postImgRepository: Repository<PostImg>,
+    @InjectRepository(Img)
+    private imgRepository: Repository<Img>,
   ) {}
 
   async createPost(createPostDto: CreatePostDto): Promise<Post> {
@@ -27,12 +31,13 @@ export class PostService {
     const savedPost = await this.postRepository.save(post);
     if (imgs && imgs.length > 0) {
       // 为每个 PostImg 创建实体并设置关联
-      const imgEntities = imgs.map((imgDto) => {
-        const img = this.imgRepository.create({
-          ...imgDto,
+      const imgEntities = imgs.map(async (img_id: string) => {
+        const Img = await this.imgRepository.findOne({ where: { id: img_id } });
+        const img = this.postImgRepository.create({
+          ...Img,
           post: savedPost, // 设置关联
         });
-        return this.imgRepository.save(img);
+        return this.postImgRepository.save(img);
       });
 
       // 等待所有 PostImg 实体保存完成
@@ -56,7 +61,7 @@ export class PostService {
     // 处理图片更新
     if (imgs.length) {
       // 获取当前数据库中的图片
-      const currentImgs = await this.imgRepository.find({
+      const currentImgs = await this.postImgRepository.find({
         where: { post: { id } },
       });
 
@@ -70,15 +75,15 @@ export class PostService {
       );
 
       // 删除图片
-      await this.imgRepository.remove(imgsToDelete);
+      await this.postImgRepository.remove(imgsToDelete);
 
       // 添加新图片
       const newImgEntities = imgsToAdd.map((imgDto) => {
-        const img = this.imgRepository.create({
+        const img = this.postImgRepository.create({
           ...imgDto,
           post,
         });
-        return this.imgRepository.save(img);
+        return this.postImgRepository.save(img);
       });
 
       await Promise.all(newImgEntities);

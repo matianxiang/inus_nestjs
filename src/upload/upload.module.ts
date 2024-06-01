@@ -3,8 +3,10 @@ import { UploadService } from './upload.service';
 import { UploadController } from './upload.controller';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { extname, join } from 'path';
-import { readdirSync } from 'fs';
+import { join } from 'path';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Img } from './entities/img.entity';
+// import { readdirSync } from 'fs';
 
 //@Global() 使upload模块成为全局模块 使一切全局化并不是一个好的解决方案。 全局模块可用于减少必要模板文件的数量。 imports 数组仍然是使模块 API 透明的最佳方式。
 @Module({
@@ -13,16 +15,17 @@ import { readdirSync } from 'fs';
       // 存放
       storage: diskStorage({
         // 存放目录
-        destination: join(__dirname, '../images'),
+        destination: join(__dirname, '../public/images'),
         // 命名
         filename: (_, file, callback) => {
           // 时间戳 + 后缀名
-          const files = readdirSync(join(__dirname, '../images'));
-          const _fileName = `${files.length + 1 + extname(file.originalname)}`; // extname用来截取文件名字符串后缀
+          // const files = readdirSync(join(__dirname, '../images'));
+          const _fileName = `${file.originalname}`; // extname用来截取文件名字符串后缀
           return callback(null, _fileName); //callback 第一个参数是Error 例如传入new Error(`${file.originalname}存储失败`) 那么就会返回失败
         },
       }),
     }),
+    TypeOrmModule.forFeature([Img]),
   ],
   controllers: [UploadController],
   providers: [UploadService],

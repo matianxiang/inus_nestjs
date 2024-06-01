@@ -4,10 +4,7 @@ import {
   MinLength,
   MaxLength,
   IsArray,
-  ValidateNested,
 } from 'class-validator';
-import { CreateImgDto } from './create-img.dto';
-import { Type } from 'class-transformer';
 
 export class CreatePostDto {
   @IsInt()
@@ -25,8 +22,5 @@ export class CreatePostDto {
   content: string;
 
   @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => CreateImgDto)
-  // 这里使用 @ValidateNested() 和 @Type() 装饰器来确保数组中的每个对象都符合 CreateImgDto 的结构。
-  imgs: CreateImgDto[] = [];
+  imgs: string[];
 }
