@@ -43,4 +43,9 @@ export class PostController {
   toggleStar(@Body('user_id') user_id: number, @Body('id') id: string) {
     return this.postService.toggleStar(user_id, id);
   }
+
+  @Post('increment-share-count')
+  incrementShareCount(@Body('id') id: string) {
+    return this.postService.incrementShareCount(id);
+  }
 }

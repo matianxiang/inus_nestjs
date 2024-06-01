@@ -157,4 +157,10 @@ export class PostService {
     await this.postRepository.save(post);
     await this.userRepository.save(user);
   }
+
+  async incrementShareCount(id: string): Promise<void> {
+    const post = await this.postRepository.findOneByOrFail({ id: id });
+    post.share_count += 1;
+    await this.postRepository.save(post);
+  }
 }

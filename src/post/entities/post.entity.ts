@@ -62,6 +62,9 @@ export class Post {
   @JoinTable()
   star_by: User[];
 
+  @Column({ type: 'int', default: 0 })
+  share_count: number;
+
   @OneToMany(() => PostImg, (img) => img.post, {
     cascade: ['insert', 'update', 'remove'],
     // insert: 如果在保存主实体时关联实体是新创建的（即未在数据库中存在），则自动保存这些新的关联实体。
