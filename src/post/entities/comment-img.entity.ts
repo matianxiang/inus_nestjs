@@ -15,7 +15,7 @@ export class CommentImg {
   @Column()
   url: string; // 存储图片的URL或者文件路径
 
-  @ManyToOne(() => Comment, (comment) => comment.imgs)
+  @ManyToOne(() => Comment, (comment) => comment.imgs, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'comment_id' })
   comment: Comment;
 }
