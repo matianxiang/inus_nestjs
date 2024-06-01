@@ -1,9 +1,11 @@
 import { Gender } from 'src/enums';
+import { Post } from 'src/post/entities/post.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity('Users')
@@ -52,10 +54,12 @@ export class User {
   @Column({ type: 'int', default: 0 })
   post_count: number;
 
+  @OneToMany(() => Post, (post) => post.user)
+  posts: Post[];
+
   @Column({ type: 'int', default: 0 })
   video_count: number;
 
   @Column({ type: 'varchar', length: 100, default: '上海' })
   address: string;
-  posts: any;
 }
