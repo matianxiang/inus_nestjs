@@ -1,29 +1,22 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
-  Column,
   ManyToOne,
   JoinColumn,
+  OneToOne,
+  PrimaryColumn,
 } from 'typeorm';
 import { Post } from './post.entity';
 import { User } from 'src/user/entities/user.entity';
+import { Img } from 'src/upload/entities/img.entity';
 
 @Entity('PostImgs')
 export class PostImg {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryColumn({ type: 'string' })
+  img_id: string;
 
-  @Column({ type: 'int' })
-  height: number;
-
-  @Column({ type: 'int' })
-  width: number;
-
-  @Column({ type: 'int' })
-  size: number;
-
-  @Column({ type: 'varchar' })
-  url: string;
+  @OneToOne(() => Img, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'img_id' })
+  img: Img;
 
   @ManyToOne(() => Post, (post) => post.imgs, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'post_id' })

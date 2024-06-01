@@ -67,11 +67,11 @@ export class PostService {
 
       // 找出要删除的图片
       const imgsToDelete = currentImgs.filter(
-        (ci) => !imgs.some((i) => i.id === ci.id),
+        (ci) => !imgs.some((i) => i.id === ci.img_id),
       );
       // 找出要添加的图片
       const imgsToAdd = imgs.filter(
-        (i) => !currentImgs.some((ci) => ci.id === i.id),
+        (i) => !currentImgs.some((ci) => ci.img_id === i.id),
       );
 
       // 删除图片
