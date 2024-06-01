@@ -10,8 +10,8 @@ import { User } from 'src/user/entities/user.entity';
 
 @Entity('Imgs')
 export class Img {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ type: 'int' })
   height: number;

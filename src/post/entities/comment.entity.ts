@@ -13,11 +13,12 @@ import {
 } from 'typeorm';
 import { Post } from './post.entity';
 import { User } from 'src/user/entities/user.entity';
+import { CommentImg } from './comment-img.entity';
 
 @Entity()
 export class Comment {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   content: string;
@@ -28,17 +29,20 @@ export class Comment {
   post: Post;
 
   @ManyToOne(() => Comment, (comment) => comment.children)
-  parentComment: Comment;
+  parent_comment: Comment;
 
-  @OneToMany(() => Comment, (comment) => comment.parentComment)
+  @OneToMany(() => Comment, (comment) => comment.parent_comment)
   children: Comment[];
 
   @Column({ default: 0 })
-  likes: number;
+  favour_count: number;
 
   @ManyToMany(() => User)
   @JoinTable()
-  likedBy: User[];
+  favour_by: User[];
+
+  @OneToMany(() => CommentImg, (image) => image.comment)
+  imgs: CommentImg[]; // 添加这个字段来存储与评论相关联的图片
 
   @AfterInsert()
   async incrementPostCommentsCount() {
@@ -55,7 +59,7 @@ export class Comment {
     await entityManager.increment(
       Post,
       { id: this.post.id },
-      'commentsCount',
+      'comments_count',
       increment,
     );
   }
