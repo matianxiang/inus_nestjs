@@ -34,6 +34,7 @@ import { Img } from './upload/entities/img.entity';
       logging: true, // 开启日志
       entities: [User, Follow, Post, PostImg, Comment, CommentImg, Img], // 用于指定应用中所有数据库实体的位置。实体（Entity）是 TypeORM 用来映射数据库表到 JavaScript 或 TypeScript 类的一种机制。每一个实体类代表数据库中的一张表，类中的属性对应于表中的列。
       synchronize: true, // 控制是否允许 TypeORM 根据实体自动更新数据库结构。
+      charset: 'utf8mb4', // 指定字符集
     }),
   ], //将upload模块导入根模块
   controllers: [AppController],
