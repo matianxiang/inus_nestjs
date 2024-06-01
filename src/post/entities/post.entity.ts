@@ -24,7 +24,7 @@ export class Post {
   @Column({ type: 'int' })
   user_id: number;
 
-  @ManyToOne(() => User, (user) => user.posts) //多对一 多个Post可能对应一个User
+  @ManyToOne(() => User, (user) => user.posts, { onDelete: 'CASCADE' }) //多对一 多个Post可能对应一个User
   @JoinColumn({ name: 'user_id' })
   user: User;
 
