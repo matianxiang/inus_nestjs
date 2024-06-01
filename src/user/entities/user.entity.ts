@@ -57,4 +57,5 @@ export class User {
 
   @Column({ type: 'varchar', length: 100, default: '上海' })
   address: string;
+  posts: any;
 }
