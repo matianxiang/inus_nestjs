@@ -16,7 +16,7 @@ import {
 
 import { User } from 'src/user/entities/user.entity';
 import { Comment } from './comment.entity';
-import { Img } from './img.entity';
+import { PostImg } from './post-img.entity';
 
 @Entity('Posts')
 export class Post {
@@ -62,15 +62,15 @@ export class Post {
   @JoinTable()
   star_by: User[];
 
-  @OneToMany(() => Img, (img) => img.post, {
+  @OneToMany(() => PostImg, (img) => img.post, {
     cascade: ['insert', 'update', 'remove'],
     // insert: 如果在保存主实体时关联实体是新创建的（即未在数据库中存在），则自动保存这些新的关联实体。
     // update: 如果关联实体在加载后被修改，当保存主实体时也会自动保存这些更改。
     // remove: 如果从关联数组中移除了某些实体，保存主实体时也会从数据库中删除这些实体。
-    // 这意味着当你保存、更新或删除一个 Post 实体时，与之关联的 Img 实体也会根据上述规则自动进行插入、更新或删除操作。
+    // 这意味着当你保存、更新或删除一个 Post 实体时，与之关联的 PostImg 实体也会根据上述规则自动进行插入、更新或删除操作。
     eager: true, // eager 选项用于控制关联实体的加载方式。在 TypeORM 中，关联可以是 eager（急切加载）或 lazy（懒加载
   })
-  imgs: Img[];
+  imgs: PostImg[];
 
   // hooks 自动更新user的post_count
   @AfterInsert()

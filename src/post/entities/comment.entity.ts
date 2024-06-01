@@ -15,7 +15,7 @@ import { Post } from './post.entity';
 import { User } from 'src/user/entities/user.entity';
 import { CommentImg } from './comment-img.entity';
 
-@Entity()
+@Entity('Comments')
 export class Comment {
   @PrimaryGeneratedColumn('uuid')
   id: string;

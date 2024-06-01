@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { Comment } from './comment.entity';
 
-@Entity()
+@Entity('CommentImgs')
 export class CommentImg {
   @PrimaryGeneratedColumn()
   id: number;
