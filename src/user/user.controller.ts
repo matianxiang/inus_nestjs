@@ -9,12 +9,12 @@ import {
   Put,
   Delete,
   HttpCode,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './entities/user.entity';
 import { ResBasic } from 'src/types/common';
 import { SuccessRes } from 'src/models';
-
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -98,6 +98,16 @@ export class UserController {
         username,
       );
     return new SuccessRes(res);
+  }
+
+  @Get('favour-posts/:user_id')
+  getFavourPosts(@Param('user_id', ParseIntPipe) user_id: number) {
+    return this.userService.getFavourPosts(user_id);
+  }
+
+  @Get('star-posts/:user_id')
+  getStarPosts(@Param('user_id', ParseIntPipe) user_id: number) {
+    return this.userService.getStarPosts(user_id);
   }
 
   @Get(':user_id')

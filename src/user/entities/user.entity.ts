@@ -62,4 +62,10 @@ export class User {
 
   @Column({ type: 'varchar', length: 100, default: '上海' })
   address: string;
+
+  @Column({ array: true, default: () => [] })
+  favour_post_ids: string[];
+
+  @Column({ array: true, default: () => [] })
+  star_post_ids: string[];
 }

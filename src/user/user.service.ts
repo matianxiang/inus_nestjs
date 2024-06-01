@@ -1,12 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { faker } from '@faker-js/faker';
+import { Post } from 'src/post/entities/post.entity';
 
 @Injectable()
 export class UserService {
   constructor(
+    @InjectRepository(Post)
+    private readonly postRepository: Repository<Post>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
   ) {}
@@ -105,5 +108,35 @@ export class UserService {
 
   count(): Promise<number> {
     return this.userRepository.count();
+  }
+
+  async getFavourPosts(user_id: number): Promise<Post[]> {
+    const user = await this.userRepository.findOne({ where: { user_id } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (user.favour_post_ids.length === 0) {
+      return [];
+    }
+
+    return this.postRepository.find({
+      where: { id: In(user.favour_post_ids) },
+    });
+  }
+
+  async getStarPosts(user_id: number): Promise<Post[]> {
+    const user = await this.userRepository.findOne({ where: { user_id } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (user.star_post_ids.length === 0) {
+      return [];
+    }
+
+    return this.postRepository.find({
+      where: { id: In(user.star_post_ids) },
+    });
   }
 }
