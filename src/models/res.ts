@@ -1,32 +1,32 @@
 import { HttpCode } from 'src/enums';
 
-class BasicRes {
+class BasicRes<T> {
   code: HttpCode;
-  data: any;
+  data: T;
   message: string;
 
-  constructor(data: any, code: HttpCode, message: string) {
+  constructor(data: T, code: HttpCode, message: string) {
     this.data = data;
     this.code = code;
     this.message = message;
   }
 }
 
-export class SuccessRes extends BasicRes {
-  constructor(data: any) {
+export class SuccessRes<T> extends BasicRes<T> {
+  constructor(data: T) {
     super(data, 200, 'success');
   }
 }
 
-export class FailedRes extends BasicRes {
-  constructor(data: any, message?: string) {
+export class FailedRes<T> extends BasicRes<T> {
+  constructor(data: T, message?: string) {
     super(data, 400, 'failed');
     message && (this.message = message);
   }
 }
 
-export class UnauthorizedRes extends BasicRes {
-  constructor(data: any, message?: string) {
+export class UnauthorizedRes<T> extends BasicRes<T> {
+  constructor(data: T, message?: string) {
     super(data, 403, 'unauthorizedRes');
     message && (this.message = message);
   }
