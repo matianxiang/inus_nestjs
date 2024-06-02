@@ -166,7 +166,9 @@ export class UserController {
 
   @Delete(':user_id')
   @HttpCode(200)
-  async deleteUser(@Param('user_id') user_id: number): Promise<ResBasic<void>> {
+  async deleteUser(
+    @Param('user_id') user_id: number,
+  ): Promise<ResBasic<object>> {
     await this.userService.deleteUser(user_id);
     return new SuccessRes({});
   }
