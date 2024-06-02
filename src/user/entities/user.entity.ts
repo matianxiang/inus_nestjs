@@ -15,7 +15,7 @@ export class User {
   })
   user_id: number;
 
-  @Column({ type: 'varchar', length: 50, default: 'momo' })
+  @Column({ type: 'varchar', length: 50, default: 'momo', charset: 'utf8mb4' })
   username: string;
 
   @Column({ type: 'varchar', length: 50 })

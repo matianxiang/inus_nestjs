@@ -22,5 +22,5 @@ export class CreatePostDto {
   content: string;
 
   @IsArray()
-  imgs: string[];
+  img_ids: string[];
 }

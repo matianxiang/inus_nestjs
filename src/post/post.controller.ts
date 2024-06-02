@@ -14,6 +14,11 @@ import { PostService } from './post.service';
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
+  @Post('mock')
+  mockPosts() {
+    return this.postService.mockPosts();
+  }
+
   @Post()
   createPost(CreatePostDto) {
     return this.postService.createPost(CreatePostDto);

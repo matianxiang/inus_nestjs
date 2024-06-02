@@ -6,12 +6,12 @@ import {
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  AfterInsert,
-  AfterRemove,
-  getRepository,
   OneToMany,
   ManyToMany,
   JoinTable,
+  // AfterInsert,
+  // AfterRemove,
+  // getRepository,
 } from 'typeorm';
 
 import { User } from 'src/user/entities/user.entity';
@@ -30,10 +30,10 @@ export class Post {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, charset: 'utf8mb4' })
   title: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', charset: 'utf8mb4' })
   content: string;
 
   @CreateDateColumn()
@@ -76,15 +76,15 @@ export class Post {
   imgs: PostImg[];
 
   // hooks 自动更新user的post_count
-  @AfterInsert()
-  async increasePostCount() {
-    const userRepository = getRepository('User');
-    await userRepository.increment({ user_id: this.user_id }, 'post_count', 1);
-  }
+  // @AfterInsert()
+  // async increasePostCount() {
+  //   const userRepository = getRepository(User);
+  //   await userRepository.increment({ user_id: this.user_id }, 'post_count', 1);
+  // }
 
-  @AfterRemove()
-  async decreasePostCount() {
-    const userRepository = getRepository('User');
-    await userRepository.decrement({ user_id: this.user_id }, 'post_count', 1);
-  }
+  // @AfterRemove()
+  // async decreasePostCount() {
+  //   const userRepository = getRepository(User);
+  //   await userRepository.decrement({ user_id: this.user_id }, 'post_count', 1);
+  // }
 }

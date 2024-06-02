@@ -7,7 +7,7 @@ import { PostImg } from './entities/post-img.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Img } from 'src/upload/entities/img.entity';
-
+import source from 'scripts/result';
 @Injectable()
 export class PostService {
   constructor(
@@ -21,21 +21,62 @@ export class PostService {
     private imgRepository: Repository<Img>,
   ) {}
 
+  async mockPosts(): Promise<void> {
+    for (let i = 15; i < source.length; i++) {
+      const data = source[i];
+
+      const img_ids = [];
+      for (let j = 0; j < data.imgs.length; j++) {
+        const { size, width, height, url } = data.imgs[j];
+
+        // 创建img实体
+        const img = await this.imgRepository.create({
+          size,
+          width,
+          height,
+          url,
+        });
+        await this.imgRepository.save(img);
+        img_ids.push(img.id);
+      }
+
+      const { user_id, title, content, favour_count } = data;
+      if (!title) console.log('data', data);
+      // 创建post实体
+      await this.createPost({
+        user_id,
+        title: title || '123',
+        content: content || 'xxx',
+        img_ids,
+      });
+
+      // 获取所有Post
+      const posts = await this.postRepository.find();
+
+      // 更新每个用户的 isActive 字段
+      posts.forEach(async (post) => {
+        post.favour_count = favour_count;
+        await this.postRepository.save(post);
+      });
+    }
+  }
+
   async createPost(createPostDto: CreatePostDto): Promise<Post> {
-    const { user_id, title, content, imgs } = createPostDto;
+    const { user_id, title, content, img_ids } = createPostDto;
     const user = await this.userRepository.findOne({
       where: { user_id: user_id },
     });
     const post = this.postRepository.create({ user, title, content });
     // 保存 Post 实体以获取生成的 ID
     const savedPost = await this.postRepository.save(post);
-    if (imgs && imgs.length > 0) {
+    if (img_ids && img_ids.length > 0) {
       // 为每个 PostImg 创建实体并设置关联
-      const imgEntities = imgs.map(async (img_id: string) => {
+      const imgEntities = img_ids.map(async (img_id: string) => {
         const Img = await this.imgRepository.findOne({ where: { id: img_id } });
         const img = this.postImgRepository.create({
           ...Img,
           post: savedPost, // 设置关联
+          img: Img,
         });
         return this.postImgRepository.save(img);
       });
@@ -43,11 +84,19 @@ export class PostService {
       // 等待所有 PostImg 实体保存完成
       await Promise.all(imgEntities);
     }
+    // 更新user post_count
+    user.post_count += 1;
+    this.userRepository.update(user.user_id, {
+      post_count: (user.post_count += 1),
+    });
+
     return savedPost;
   }
 
   async deletePostsByIds(ids: string[]): Promise<void> {
     await this.postRepository.delete(ids);
+    // 需要补充更新user post_count
+    // ....
   }
 
   async updatePost(updatePostDto: UpdatePostDto): Promise<Post> {
