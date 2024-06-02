@@ -212,4 +212,38 @@ export class PostService {
     post.share_count += 1;
     await this.postRepository.save(post);
   }
+
+  async findAllPaginated(
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{ posts: Post[]; total: number }> {
+    // return {
+    //   posts: await this.postRepository.find({
+    //     skip: (page - 1) * limit,
+    //     take: limit,
+    //   }),
+    //   total: await this.postRepository.count(),
+    // };
+    const queryBuilder = this.postRepository.createQueryBuilder('post');
+
+    queryBuilder
+      .leftJoin('post.user', 'user')
+      // 这里要用leftJoin 不能用leftJoinAndSelect 否则会返回整个user
+      // ”post" 是 Post 实体的别名。
+      // "post.user" 指的是 Post 实体中 user 的关系属性。
+      // "user" 是 User 实体的别名。
+      .addSelect(['user.username', 'user.avatar_url']) // 仅选择需要的用户字段
+      // 指定了额外从 User 表中选择 username 和 avatar_url 字段。
+      .leftJoinAndSelect('post.imgs', 'imgs')
+      .orderBy('post.created_at', 'DESC')
+      .skip((page - 1) * limit)
+      .take(limit);
+
+    const [result, total] = await queryBuilder.getManyAndCount();
+
+    return {
+      posts: result,
+      total: total,
+    };
+  }
 }

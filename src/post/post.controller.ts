@@ -25,6 +25,16 @@ export class PostController {
     return new SuccessRes({});
   }
 
+  @Get('list')
+  @HttpCode(200)
+  async getPostsByPagation(
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+  ): Promise<ResBasic<{ posts: PostType[]; total: number }>> {
+    const res = await this.postService.findAllPaginated(page, limit);
+    return new SuccessRes(res);
+  }
+
   @Post()
   @HttpCode(200)
   async createPost(CreatePostDto): Promise<ResBasic<PostType>> {
