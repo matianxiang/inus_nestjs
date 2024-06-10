@@ -31,4 +31,9 @@ export class UploadService {
     await this.imgRepository.save(newImg);
     return newImg;
   }
+
+  async queryImg(img_id: string): Promise<Img> {
+    const res = await this.imgRepository.findOne({ where: { id: img_id } });
+    return res;
+  }
 }

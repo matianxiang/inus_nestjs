@@ -4,11 +4,14 @@ import {
   UseInterceptors,
   UploadedFile,
   HttpCode,
+  Param,
+  Get,
 } from '@nestjs/common';
 import { UploadService } from './upload.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ResBasic } from 'src/types/common';
 import { SuccessRes } from 'src/models';
+import { Img } from './entities/img.entity';
 
 @Controller('upload')
 export class UploadController {
@@ -22,6 +25,13 @@ export class UploadController {
     return new SuccessRes(res);
   }
 
+  @Get(':img_id')
+  @HttpCode(200)
+  async queryImg(@Param('img_id') img_id: string): Promise<ResBasic<Img>> {
+    const res = await this.uploadService.queryImg(img_id);
+    console.log('img_id', res, img_id);
+    return new SuccessRes(res);
+  }
   // @Post('album')
   // @UseInterceptors(FileInterceptor('file')) //上传文件必须要用到UseInterceptors中间件 单文件用FileInterceptor 多文件用FilesInterceptor
   // @HttpCode(200)
